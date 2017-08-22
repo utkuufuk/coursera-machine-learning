@@ -1,32 +1,25 @@
 %% Machine Learning Online Class - Exercise 1: Linear Regression
-%% ======================= Part 1: Plotting =======================
+
+%% =================== Part 1: Gradient descent ===================
+% Read and plot the data
 data = load('ex1data1.txt');
 X = data(:, 1);             % population size in 10,000s
 y = data(:, 2);             % profit in $10,000s
 numExamples = length(y);    % number of training examples
 plotData(X, y);
-%% =================== Part 2: Gradient descent ===================
+
+% Initialize model parameters
 X = [ones(numExamples, 1), data(:,1)];  % add a column of ones to x
 theta = zeros(2, 1);                    % initialize model parameters
-computeCost(X, y, theta)                % compute and display the initial cost
+fprintf('The initial cost is: %f\n', computeCost(X, y, theta, 0));    
 
-% Some gradient descent settings
-iterations = 2400;
+% Gradient descent settings
+numIters = 2400;
 alpha = 0.005;
 
-% run gradient descent
-%theta = gradientDescent(X, y, theta, alpha, iterations);
-
-[theta, J_history] = gradientDescentMulti(X, y, theta, alpha, iterations);
-
-% Plot the convergence graph
-% figure;
-% plot(1:numel(J_history), J_history, '-b', 'LineWidth', 2);
-% xlabel('Number of iterations');
-% ylabel('Cost J');
-
-% print theta to screen
-fprintf('The final cost is: %f\n', computeCost(X, y, theta));
+% Run gradient descent
+[theta, costHistory] = gradientDescent(X, y, theta, alpha, 0, numIters);
+fprintf('The final cost is: %f\n', costHistory(end));
 fprintf('Theta found by gradient descent: %f %f \n', theta(1), theta(2));
 
 % Plot the linear fit
@@ -35,12 +28,17 @@ plot(X(:, 2), X * theta, '-')
 legend('Training data', 'Linear regression')
 hold off % don't overlay any more plots on this figure
 
-% Predict values for population sizes of 35,000 and 70,000
-predict1 = [1, 3.5] * theta;
-fprintf('For population = 35,000, we predict a profit of %f\n', predict1*10000);
-predict2 = [1, 7] * theta;
-fprintf('For population = 70,000, we predict a profit of %f\n', predict2*10000);
-%% ============= Part 3: Visualizing J(theta_0, theta_1) =============
+% Plot the convergence graph
+figure;
+plot(1:numel(costHistory), costHistory, '-b', 'LineWidth', 2);
+xlabel('Number of iterations');
+ylabel('Cost J');
+
+% Predict profit for population size 70,000
+prediction = [1, 7] * theta;
+fprintf('For population = 70,000, we predict a profit of %f\n', prediction * 10000);
+
+%% ============= Part 2: Visualizing J(theta_0, theta_1) =============
 % Grid over which we will calculate J
 theta0_vals = linspace(-10, 10, 100);
 theta1_vals = linspace(-1, 4, 100);
@@ -52,14 +50,14 @@ J_vals = zeros(length(theta0_vals), length(theta1_vals));
 for i = 1:length(theta0_vals)
     for j = 1:length(theta1_vals)
 	  t = [theta0_vals(i); theta1_vals(j)];    
-	  J_vals(i,j) = computeCost(X, y, t);
+	  J_vals(i,j) = computeCost(X, y, t, 0);
     end
 end
-
 
 % Because of the way meshgrids work in the surf command, we need to 
 % transpose J_vals before calling surf, or else the axes will be flipped
 J_vals = J_vals';
+
 % Surface plot
 figure;
 surf(theta0_vals, theta1_vals, J_vals)
