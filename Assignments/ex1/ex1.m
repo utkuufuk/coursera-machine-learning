@@ -9,13 +9,13 @@ numExamples = length(y);    % number of training examples
 plotData(X, y);
 
 % Initialize model parameters
-X = [ones(numExamples, 1), data(:,1)];  % add a column of ones to x
+X = [ones(numExamples, 1), X];  % add a column of ones to x
 theta = zeros(2, 1);                    % initialize model parameters
 fprintf('The initial cost is: %f\n', computeCost(X, y, theta, 0));    
 
 % Gradient descent settings
-numIters = 2400;
-alpha = 0.005;
+numIters = 600;
+alpha = 0.02;
 
 % Run gradient descent
 [theta, costHistory] = gradientDescent(X, y, theta, alpha, 0, numIters);
@@ -33,6 +33,7 @@ figure;
 plot(1:numel(costHistory), costHistory, '-b', 'LineWidth', 2);
 xlabel('Number of iterations');
 ylabel('Cost J');
+title(strcat('learning rate = ', {' '}, num2str(alpha)));
 
 % Predict profit for population size 70,000
 prediction = [1, 7] * theta;
