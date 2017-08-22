@@ -1,4 +1,5 @@
-function cost = computeCost(X, y, theta, lambda) 
+function cost = computeCost(X, y, theta, lambda)
+
     predictions = X * theta;
     squaredErrors = (predictions - y) .^ 2;
     theta(1) = [];

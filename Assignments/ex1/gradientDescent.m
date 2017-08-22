@@ -2,7 +2,6 @@ function [theta, costHistory] = gradientDescent(X, y, theta, alpha, lambda, numI
 
     costHistory = zeros(numIters, 1);
     
-    
     for iterationIndex = 1:numIters
         
         % calculate predictions with the parameters calculated in the previous iteration
