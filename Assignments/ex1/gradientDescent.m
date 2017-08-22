@@ -1,29 +1,17 @@
-function [theta, J_history] = gradientDescent(X, y, theta, alpha, num_iters)
-%gradientDescent Performs gradient descent to learn theta
-%   theta = gradientDescent(X, y, theta, alpha, num_iters) updates theta by 
-%   taking num_iters gradient steps with learning rate alpha
+function [theta, costHistory] = gradientDescent(X, y, theta, alpha, numIters)
 
-    % Initialize some useful values
-    m = length(y); % number of training examples
-    J_history = zeros(num_iters, 1);
+    costHistory = zeros(numIters, 1);
 
-    for iter = 1:num_iters
+    for iterationIndex = 1:numIters
         
-        H = X * theta;  % calculate H with the theta values calculated in the previous iteration.
-                
-        for i = 1:m
-            
-%             descent1 = (H(i) - y(i)) * X(i, 1);
-%             descent2 = (H(i) - y(i)) * X(i, 2);
-%             theta(1) = theta(1) - (alpha * descent1 / m);
-%             theta(2) = theta(2) - (alpha * descent2 / m);
-
-            theta(1) = theta(1) - (alpha * (H(i) - y(i)) * X(i, 1) / m);
-            theta(2) = theta(2) - (alpha * (H(i) - y(i)) * X(i, 2) / m);
-        end
+        % calculate predictions with the parameters calculated in the previous iteration
+        predictions = X * theta;  
         
-        J_history(iter) = computeCost(X, y, theta);     % Save the cost J in every iteration
+        regularization = lambda * theta;
+        regularization(1) = 0;  % don't penalize the intercept term.
+        
+        descent = transpose(X) * (predictions - y) + regularization;
+        theta = theta - (alpha * descent / length(y));
+        costHistory(iterationIndex) = computeCost(X, y, theta);     % Save the cost J in every iteration
     end
-    
-%     plot(1:num_iters, J_history, '-')
 end
