@@ -14,16 +14,17 @@ X = [ones(numExamples, 1), X];
 
 % Choose some alpha value
 alpha = 0.2;
-num_iters = 100;
+numIters = 100;
 
 % Init Theta and Run Gradient Descent 
 theta = zeros(3, 1);
-[theta, costHistory] = gradientDescent(X, y, theta, alpha, 0, num_iters);
+[theta, costHistory] = gradientDescent(X, y, theta, alpha, 0, numIters);
 fprintf('The final cost is: %f\n', costHistory(end));
 
 % Plot the convergence graph
 figure;
-plot(1:numel(costHistory), costHistory, '-b', 'LineWidth', 2);
+plot(1:numel(costHistory), costHistory, 'LineWidth', 2);
+title(strcat('learning rate = ', {' '}, num2str(alpha)));
 xlabel('Number of iterations');
 ylabel('Cost J');
 
@@ -33,9 +34,9 @@ fprintf(' %f \n', theta);
 fprintf('\n');
 
 % Estimate the price of a 1650 sq-ft, 3 br house
-normalizedFeature1 = (1650 - means(1)) / stDevs(1);
-normalizedFeature2 = (3 - means(2)) / stDevs(2);
-price = [1, normalizedFeature1, normalizedFeature2] * theta;
+houseSize = (1650 - means(1)) / stDevs(1);
+numBedrooms = (3 - means(2)) / stDevs(2);
+price = [1, houseSize, numBedrooms] * theta;
 fprintf('Predicted price of a 1650 sq-ft, 3 br house:\n $%f\n', price);
 
 %% ================ Part 3: Normal Equations ================
