@@ -6,7 +6,12 @@ data = load('ex1data1.txt');
 X = data(:, 1);             % population size in 10,000s
 y = data(:, 2);             % profit in $10,000s
 numExamples = length(y);    % number of training examples
-plotData(X, y);
+
+% Plot data
+figure;
+plot(X, y, 'rx', 'MarkerSize', 10);
+ylabel('Profit in $10,000s');
+xlabel('City population in 10,000s');
 
 % Initialize model parameters
 X = [ones(numExamples, 1), X];  % add a column of ones to x
@@ -24,13 +29,13 @@ fprintf('Theta found by gradient descent: %f %f \n', theta(1), theta(2));
 
 % Plot the linear fit
 hold on; % keep previous plot visible
-plot(X(:, 2), X * theta, '-')
-legend('Training data', 'Linear regression')
-hold off % don't overlay any more plots on this figure
+plot(X(:, 2), X * theta, '-');
+legend('Training data', 'Linear regression');
+hold off; % don't overlay any more plots on this figure
 
 % Plot the convergence graph
 figure;
-plot(1:numel(costHistory), costHistory, '-b', 'LineWidth', 2);
+plot(1:numel(costHistory), costHistory, 'LineWidth', 2);
 xlabel('Number of iterations');
 ylabel('Cost J');
 title(strcat('learning rate = ', {' '}, num2str(alpha)));
