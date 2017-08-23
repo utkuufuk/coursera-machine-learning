@@ -11,10 +11,9 @@ function [trainError, validationError] = learningCurve(X, y, valX, valY, lambda)
     % Number of training examples
     trainingSetSize = size(X, 1);
     trainError = zeros(trainingSetSize, 1);
-    validationError   = zeros(trainingSetSize, 1);
+    validationError = zeros(trainingSetSize, 1);
     
     for i = 1:trainingSetSize
-    
         theta = trainLinearReg(X(1:i, :), y(1:i), lambda);
         trainError(i) = linearRegCostFunction(X(1:i, :), y(1:i), theta, 0);
         validationError(i) = linearRegCostFunction(valX, valY, theta, 0);
