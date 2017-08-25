@@ -17,7 +17,8 @@
 %
 
 %% Initialization
-clear ; close all; clc
+clear; close all; clc;
+addpath(genpath('../common'))
 
 %% ==================== Part 1: Email Preprocessing ====================
 %  To use an SVM to classify emails into Spam v.s. Non-Spam, you first need

@@ -1,4 +1,4 @@
-function [h, display_array] = displayData(X, example_width)
+function [h, display_array] = displayDigits(X, example_width)
 %DISPLAYDATA Display 2D data in a nice grid
 %   [h, display_array] = DISPLAYDATA(X, example_width) displays 2D data
 %   stored in X in a nice grid. It returns the figure handle h and the 
@@ -55,5 +55,4 @@ function [h, display_array] = displayData(X, example_width)
     axis image off
 
     drawnow;
-
 end

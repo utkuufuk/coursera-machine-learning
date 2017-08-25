@@ -1,5 +1,6 @@
 %% Machine Learning Online Class - Exercise 5 | Regularized Linear Regression and Bias-Variance
-
+clear; close all; clc;
+addpath(genpath('../common'))
 %% =========== Part 1: Loading and Visualizing Data =============
 load('ex5data1.mat'); % You will have X, y, Xval, yval, Xtest, ytest in your environment
 m = size(X, 1);

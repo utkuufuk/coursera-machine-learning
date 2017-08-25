@@ -17,7 +17,8 @@
 %
 
 %% Initialization
-clear ; close all; clc
+clear; close all; clc;
+addpath(genpath('../common'))
 
 %% =============== Part 1: Loading and Visualizing Data ================
 %  We start the exercise by first loading and visualizing the dataset. 

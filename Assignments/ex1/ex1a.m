@@ -1,5 +1,6 @@
 %% Machine Learning Online Class - Exercise 1: Linear Regression
-
+clear; close all; clc;
+addpath(genpath('../common'))
 %% =================== Part 1: Gradient descent ===================
 % Read and plot the data
 data = load('data1a.txt');

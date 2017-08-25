@@ -1,13 +1,16 @@
 %% Machine Learning Online Class - Exercise 2b: Regularized Logistic Regression
+clear; close all; clc;
+addpath(genpath('../common'))
+
 data = load('data2b.txt');
 X = data(:, 1:2); 
 y = data(:, 3);
 
 plotData(X, y);
 hold on;
-xlabel('Microchip Test 1')
-ylabel('Microchip Test 2')
-legend('y = 1', 'y = 0')
+xlabel('Microchip Test 1');
+ylabel('Microchip Test 2');
+legend('y = 1', 'y = 0');
 hold off;
 
 % mapFeature also adds a column of ones for us, so the intercept term is handled
@@ -33,6 +36,6 @@ legend('y = 1', 'y = 0', 'Decision boundary')
 hold off;
 
 % Compute accuracy on our training set
-p = predict(theta, X);
+p = predictLabel(theta, X);
 fprintf('Train Accuracy: %f\n', mean(p == y) * 100);
 fprintf('Expected accuracy (with lambda = 1): 83.1 (approx)\n');

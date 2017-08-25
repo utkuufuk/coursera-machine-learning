@@ -65,5 +65,5 @@ function [J, gradient] = nnCostFunction(unrolledTheta, numberOfFeatures, hiddenL
     outputThetaGradient = delta2 ./ sampleSize + p2;
     
     % Unroll gradients
-    gradient = [hiddenThetaGradient(:) ; outputThetaGradient(:)];
+    gradient = [hiddenThetaGradient(:); outputThetaGradient(:)];
 end

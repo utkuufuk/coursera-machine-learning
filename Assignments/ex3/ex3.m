@@ -1,86 +1,34 @@
 %% Machine Learning Online Class - Exercise 3 | Part 1: One-vs-all
-
-%  Instructions
-%  ------------
-%
-%  This file contains code that helps you get started on the
-%  linear exercise. You will need to complete the following functions
-%  in this exericse:
-%
-%     lrCostFunction.m (logistic regression cost function)
-%     oneVsAll.m
-%     predictOneVsAll.m
-%     predict.m
-%
-%  For this exercise, you will not need to change any code in this file,
-%  or any other files other than those mentioned above.
-%
-
-%% Initialization
-clear ; close all; clc
-
-%% Setup the parameters you will use for this part of the exercise
-num_labels = 10;          % 10 labels, from 1 to 10
-                          % (note that we have mapped "0" to label 10)
-
+clear; close all; clc;
+addpath(genpath('../common'))
 %% =========== Part 1: Loading and Visualizing Data =============
-%  We start the exercise by first loading and visualizing the dataset.
-%  You will be working with a dataset that contains handwritten digits.
-%
-
-% Load Training Data
-fprintf('Loading and Visualizing Data ...\n')
-
-load('ex3data1.mat'); % training data stored in arrays X, y
-m = size(X, 1);
+load('data3.mat');
+[numExamples, numFeatures] = size(X);
+numClasses = 10;
 
 % Randomly select 100 data points to display
-rand_indices = randperm(m);
-selectedExamples = X(rand_indices(1:100), :);
-displayData(selectedExamples);
-
-fprintf('Program paused. Press enter to continue.\n');
-pause;
-
-%% ============ Part 2a: Vectorize Logistic Regression ============
-%  In this part of the exercise, you will reuse your logistic regression
-%  code from the last exercise. You task here is to make sure that your
-%  regularized logistic regression implementation is vectorized. After
-%  that, you will implement one-vs-all classification for the handwritten
-%  digit dataset.
-%
-
-% Test case for lrCostFunction
-fprintf('\nTesting lrCostFunction()');
-
-theta_t = [-2; -1; 1; 2];
-X_t = [ones(5,1) reshape(1:15,5,3)/10];
-y_t = ([1;0;1;0;1] >= 0.5);
-lambda_t = 3;
-[J, grad] = lrCostFunction(theta_t, X_t, y_t, lambda_t);
-
-fprintf('\nCost: %f\n', J);
-fprintf('Expected cost: 2.534819\n');
-fprintf('Gradients:\n');
-fprintf(' %f \n', grad);
-fprintf('Expected gradients:\n');
-fprintf(' 0.146561\n -0.548558\n 0.724722\n 1.398003\n');
-
-fprintf('Program paused. Press enter to continue.\n');
-pause;
-%% ============ Part 2b: One-vs-All Training ============
-fprintf('\nTraining One-vs-All Logistic Regression...\n')
-
+randIndices = randperm(numExamples);
+displayDigits(X(randIndices(1:100), :));
+%% ============ Part 2: One-vs-All Training ============
 lambda = 0.1;
-[classifiers] = oneVsAll(X, y, num_labels, lambda);
 
-fprintf('Program paused. Press enter to continue.\n');
-pause;
+% initialize a classifier for each class (1 to 10)
+classifiers = zeros(numClasses, numFeatures + 1);
 
+% Add intercept term to X
+X = [ones(length(y), 1) X];
 
+% train each classifier
+for i = 1:numClasses
+    
+    class = y == i;
+    theta = zeros(numFeatures + 1, 1);
+
+    options = optimset('GradObj', 'on', 'MaxIter', 50);
+    theta = fmincg (@(t)(classificationCost(t, X, class, lambda)), theta, options);
+    classifiers(i, 1:numFeatures + 1) = theta;
+end
 %% ================ Part 3: Predict for One-Vs-All ================
-
-predictions = predictOneVsAll(classifiers, X);
-
-fprintf('\nTraining Set Accuracy: %f\n', mean(double(predictions == y)) * 100);
-
+probabilities = sigmoid(X * classifiers');      % probability of each class
+[~, predictions] = max(probabilities, [], 2);   % most probable class for each example
+fprintf('\nTraining Set Accuracy: %f\n', mean(predictions == y) * 100);

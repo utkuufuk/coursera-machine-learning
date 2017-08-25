@@ -1,5 +1,6 @@
 %% Machine Learning Online Class - Exercise 1: Linear regression with multiple variables
-addpath(genpath('../'))
+clear; close all; clc;
+addpath(genpath('../common'))
 %% ================ Part 1: Feature Normalization ================
 data = load('data1b.txt');
 X = data(:, 1:2);

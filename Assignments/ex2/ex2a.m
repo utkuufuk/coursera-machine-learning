@@ -1,17 +1,18 @@
 %% Machine Learning Online Class - Exercise 2a: Logistic Regression
-%% ==================== Part 1: Plotting ====================
+clear; close all; clc;
+addpath(genpath('../common'))
+
 data = load('data2a.txt');
 X = data(:, 1:2);   % exam scores
 y = data(:, 3);     % label
 
 plotData(X, y);
 hold on;
-xlabel('Exam 1 score')
-ylabel('Exam 2 score')
-legend('Admitted', 'Not admitted')
+xlabel('Exam 1 score');
+ylabel('Exam 2 score');
+legend('Admitted', 'Not admitted');
 hold off;
 
-%% ============= Part 2: Optimizing using fminunc  =============
 [numExamples, numFeatures] = size(X);
 
 % Add intercept term to x and X_test
@@ -47,7 +48,7 @@ fprintf('For a student with scores 45 and 85, we predict an admission probabilit
 fprintf('Expected value: 0.775 +/- 0.002\n\n');
 
 % Compute accuracy on our training set
-p = predict(theta, X);
+p = predictLabel(theta, X);
 fprintf('Train Accuracy: %f\n', mean(p == y) * 100);
 fprintf('Expected accuracy (approx): 89.0\n');
 fprintf('\n');
