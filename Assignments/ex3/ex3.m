@@ -25,7 +25,7 @@ for i = 1:numClasses
     theta = zeros(numFeatures + 1, 1);
 
     options = optimset('GradObj', 'on', 'MaxIter', 50);
-    theta = fmincg (@(t)(classificationCost(t, X, class, lambda)), theta, options);
+    theta = fmincg(@(t)(classificationCost(t, X, class, lambda)), theta, options);
     classifiers(i, 1:numFeatures + 1) = theta;
 end
 %% ================ Part 3: Predict for One-Vs-All ================

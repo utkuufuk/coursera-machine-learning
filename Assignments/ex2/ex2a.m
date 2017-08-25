@@ -1,7 +1,7 @@
 %% Machine Learning Online Class - Exercise 2a: Logistic Regression
 clear; close all; clc;
 addpath(genpath('../common'))
-
+%% ========================== Part 1: Training ============================
 data = load('data2a.txt');
 X = data(:, 1:2);   % exam scores
 y = data(:, 3);     % label
@@ -41,7 +41,7 @@ ylabel('Exam 2 score')
 legend('Admitted', 'Not admitted')
 hold off;
 
-%% ============== Part 3: Predict and Accuracies ==============
+%% ======================== Part 2: Prediction ============================
 % Predict probability for a student with scores 45 and 85
 prob = sigmoid([1 45 85] * theta);
 fprintf('For a student with scores 45 and 85, we predict an admission probability of %f\n', prob);
