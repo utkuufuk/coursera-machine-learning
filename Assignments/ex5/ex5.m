@@ -11,7 +11,7 @@ ylabel('Water flowing out of the dam (y)');
 
 %% =========== Part 2: Regularized Linear Regression Cost and Gradient =============
 theta = [1 ; 1];
-[J, grad] = linearRegCostFunction([ones(m, 1) X], y, theta, 1);
+[J, grad] = regressionCost([ones(m, 1) X], y, theta, 1);
 fprintf('Cost at theta = [1 ; 1]: %f\n(should be about 303.993192)\n', J);
 fprintf('Gradient at theta = [1; 1]: [%f; %f]\n(should be about [-15.303016; 598.250744])\n', grad(1), grad(2));
 

@@ -9,6 +9,6 @@ function [theta, costHistory] = gradientDescent(X, y, theta, alpha, lambda, numI
         regularization(1) = 0;  % don't penalize the intercept term.
         descent = transpose(X) * (predictions - y) + regularization;
         theta = theta - (alpha * descent / length(y));
-        costHistory(iterationIndex) = computeCost(X, y, theta, lambda);
+        [costHistory(iterationIndex), ~] = regressionCost(X, y, theta, lambda);
     end
 end

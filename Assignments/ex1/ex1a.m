@@ -2,7 +2,7 @@
 
 %% =================== Part 1: Gradient descent ===================
 % Read and plot the data
-data = load('ex1data1.txt');
+data = load('data1a.txt');
 X = data(:, 1);             % population size in 10,000s
 y = data(:, 2);             % profit in $10,000s
 numExamples = length(y);    % number of training examples
@@ -15,8 +15,8 @@ xlabel('City population in 10,000s');
 
 % Initialize model parameters
 X = [ones(numExamples, 1), X];  % add a column of ones to x
-theta = zeros(2, 1);                    % initialize model parameters
-fprintf('The initial cost is: %f\n', computeCost(X, y, theta, 0));    
+theta = zeros(2, 1);            % initialize model parameters
+fprintf('The initial cost is: %f\n', regressionCost(X, y, theta, 0));    
 
 % Gradient descent settings
 numIters = 600;
@@ -56,7 +56,7 @@ J_vals = zeros(length(theta0_vals), length(theta1_vals));
 for i = 1:length(theta0_vals)
     for j = 1:length(theta1_vals)
 	  t = [theta0_vals(i); theta1_vals(j)];    
-	  J_vals(i,j) = computeCost(X, y, t, 0);
+	  J_vals(i,j) = regressionCost(X, y, t, 0);
     end
 end
 

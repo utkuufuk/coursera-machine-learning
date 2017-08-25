@@ -1,7 +1,7 @@
 %% Machine Learning Online Class - Exercise 1: Linear regression with multiple variables
-
+addpath(genpath('../'))
 %% ================ Part 1: Feature Normalization ================
-data = load('ex1data2.txt');
+data = load('data1b.txt');
 X = data(:, 1:2);
 y = data(:, 3);
 numExamples = length(y);
@@ -40,7 +40,6 @@ price = [1, houseSize, numBedrooms] * theta;
 fprintf('Predicted price of a 1650 sq-ft, 3 br house:\n $%f\n', price);
 
 %% ================ Part 3: Normal Equations ================
-data = csvread('ex1data2.txt');
 X = data(:, 1:2);
 y = data(:, 3);
 numExamples = length(y);
@@ -49,7 +48,7 @@ numExamples = length(y);
 X = [ones(numExamples, 1) X];
 
 % Calculate the parameters from the normal equation
-theta = normalEquation(X, y);
+theta = pinv(transpose(X) * X) * transpose(X) * y;
 
 % Display normal equation's result
 fprintf('Theta computed from the normal equations: \n');
