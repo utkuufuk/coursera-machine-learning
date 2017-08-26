@@ -1,12 +1,10 @@
-function [J, grad] = classificationCost(theta, X, y, lambda)
+function [cost, gradient] = classificationCost(theta, X, y, lambda)
 
     predictions = sigmoid(X * theta);
-    errorPositives = - y .* log(predictions);
-    errorNegatives = (y - 1) .* log(1 - predictions);
-    regularization = lambda * sum(theta(2:end) .^ 2) / 2;
-    J = (regularization + sum(errorPositives) + sum(errorNegatives)) / length(y);
-    
+    error = -y .* log(predictions) - (1 - y) .* log(1 - predictions);
     theta(1) = 0; % don't regularize the intercept term
-    grad = ((X' * (predictions - y)) + (lambda * theta)) / length(y);
+    regularization = lambda * sum(theta .^ 2) / 2;
+    cost = (regularization + sum(error)) / length(y);
+    gradient = ((X' * (predictions - y)) + (lambda * theta)) / length(y);
 end
 

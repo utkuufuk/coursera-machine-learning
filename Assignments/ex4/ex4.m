@@ -1,30 +1,16 @@
 %% Machine Learning Online Class - Exercise 4 Neural Network Learning
 clear; close all; clc;
 addpath(genpath('../common'))
-%% Setup the parameters you will use for this exercise
-input_layer_size  = 400;  % 20x20 Input Images of Digits
+%% =========== Part 1: Loading and Visualizing Data =============
+load('ex4data1.mat');
+input_layer_size = 400;  % 20x20 Input Images of Digits
 hidden_layer_size = 25;   % 25 hidden units
 num_labels = 10;          % 10 labels, from 1 to 10 (note that we mapped "0" to "10")
-
-%% =========== Part 1: Loading and Visualizing Data =============
-%  We start the exercise by first loading and visualizing the dataset. 
-%  You will be working with a dataset that contains handwritten digits.
-%
-
-% Load Training Data
-fprintf('Loading and Visualizing Data ...\n')
-
-load('ex4data1.mat');
 
 % Randomly select 100 data points to display
 sel = randperm(size(X, 1));
 sel = sel(1:100);
-
 displayDigits(X(sel, :));
-
-fprintf('Program paused. Press enter to continue.\n');
-pause;
-
 
 %% ================ Part 2: Loading Parameters ================
 % In this part of the exercise, we load some pre-initialized 
@@ -55,8 +41,7 @@ fprintf('\nFeedforward Using Neural Network ...\n')
 % Weight regularization parameter (we set this to 0 here).
 lambda = 0;
 
-J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
-                   num_labels, X, y, lambda);
+J = nnCostFunction(nn_params, hidden_layer_size, num_labels, X, y, lambda);
 
 fprintf(['Cost at parameters (loaded from ex4weights): %f '...
          '\n(this value should be about 0.287629)\n'], J);
@@ -74,8 +59,7 @@ fprintf('\nChecking Cost Function (w/ Regularization) ... \n')
 % Weight regularization parameter (we set this to 1 here).
 lambda = 1;
 
-J = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, ...
-                   num_labels, X, y, lambda);
+J = nnCostFunction(nn_params, hidden_layer_size, num_labels, X, y, lambda);
 
 fprintf(['Cost at parameters (loaded from ex4weights): %f '...
          '\n(this value should be about 0.383770)\n'], J);
@@ -143,8 +127,7 @@ lambda = 3;
 checkNNGradients(lambda);
 
 % Also output the costFunction debugging values
-debug_J  = nnCostFunction(nn_params, input_layer_size, ...
-                          hidden_layer_size, num_labels, X, y, lambda);
+debug_J  = nnCostFunction(nn_params, hidden_layer_size, num_labels, X, y, lambda);
 
 fprintf(['\n\nCost at (fixed) debugging parameters (w/ lambda = %f): %f ' ...
          '\n(for lambda = 3, this value should be about 0.576051)\n\n'], lambda, debug_J);
@@ -170,7 +153,7 @@ options = optimset('MaxIter', 400);
 lambda = 1;
 
 % Create "short hand" for the cost function to be minimized
-costFunction = @(p) nnCostFunction(p, input_layer_size, hidden_layer_size, num_labels, X, y, lambda);
+costFunction = @(p) nnCostFunction(p, hidden_layer_size, num_labels, X, y, lambda);
 
 % Now, costFunction is a function that takes in only one argument (the
 % neural network parameters)
@@ -201,25 +184,22 @@ pause;
 
 %% ================= Part 10: Prediction =================
 pred = predict(Theta1, Theta2, X);
+fprintf('\nTraining Set Accuracy: %f\n', mean(pred == y) * 100);
 
-fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == y)) * 100);
-
-%  To give you an idea of the network's output, you can also run
-%  through the examples one at the a time to see what it is predicting.
-
-%  Randomly permute examples
+% randomly permute examples
 rp = randperm(length(y));
 
+% run through the examples one at the a time to see what it is predicting.
 for i = 1:length(y)
-    % Display 
+
     fprintf('\nDisplaying Example Image\n');
     displayDigits(X(rp(i), :));
 
     pred = predict(Theta1, Theta2, X(rp(i), :));
     fprintf('\nNeural Network Prediction: %d (digit %d)\n', pred, mod(pred, 10));
     
-    % Pause with quit option
     s = input('Paused - press enter to continue, q to exit:','s');
+    
     if s == 'q'
       break
     end

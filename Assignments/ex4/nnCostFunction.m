@@ -1,69 +1,59 @@
-function [J, gradient] = nnCostFunction(unrolledTheta, numberOfFeatures, hiddenLayerSize, numberOfClasses, X, y, lambda)
+function [cost, gradient] = nnCostFunction(theta, hiddenLayerSize, numClasses, X, y, lambda)
 % Implements the neural network cost function for a two layer neural network which performs classification
 % [J grad] = NNCOSTFUNCTON(nn_params, hidden_layer_size, numberOfClasses, X, y, lambda) computes the cost and gradient of the neural network. 
 % The parameters for the neural network are "unrolled" into the vector unrolledTheta and need to be converted back into the weight matrices. 
 % The returned gradient parameter should be an "unrolled" vector of the partial derivatives of the neural network.
-
-    %% Reshape unrolledTheta back into the parameters hiddenTheta and outputTheta, the weight matrices for our 2-layer neural network
     
-    % hiddenTheta is a hiddenLayerSize by (numberOfFeatures +1) matrix 
-    hiddenThetaRows = hiddenLayerSize;
-    hiddenThetaCols = (numberOfFeatures + 1);
-    hiddenThetaSegment = unrolledTheta(1:hiddenThetaRows * hiddenThetaCols);
-    hiddenTheta = reshape(hiddenThetaSegment, hiddenThetaRows, hiddenThetaCols);
+    %% Reshape unrolledTheta back into the parameters hiddenTheta and outputTheta
+    [numExamples, numFeatures] = size(X);
+    
+    % hiddenTheta is a hiddenLayerSize by (numberOfFeatures + 1) matrix 
+    hiddenThetaSegment = theta(1:hiddenLayerSize * (numFeatures + 1));
+    hiddenTheta = reshape(hiddenThetaSegment, hiddenLayerSize, (numFeatures + 1));
     
     % outputTheta is a numberOfClasses by (hiddenLayerSize + 1) matrix
-    outputThetaRows = numberOfClasses;
-    outputThetaCols = (hiddenLayerSize + 1);
-    outputThetaSegment = unrolledTheta((1 + (hiddenThetaRows * hiddenThetaCols)):end);
-    outputTheta = reshape(outputThetaSegment, outputThetaRows, outputThetaCols);
+    outputThetaSegment = theta((1 + (hiddenLayerSize * (numFeatures + 1))):end);
+    outputTheta = reshape(outputThetaSegment, numClasses, (hiddenLayerSize + 1));
     
-    %% Recode the output labels into a vector with dimensions equal to the output layer size
+    %% Recode the output labels
+    Y = zeros(numExamples, numClasses);
     
-    sampleSize = length(y);
-    I = eye(numberOfClasses);
-    Y = zeros(sampleSize, numberOfClasses);
-    
-    for i = 1:sampleSize
-        
-        Y(i, :) = I(y(i), :);
+    for i = 1:numClasses
+        Y(:, i) = y == i;
     end
 
     %% Calculate the cost J
-    
     % feedforward the neural network
-    inputLayer = [ones(sampleSize, 1) X];
+    inputLayer = [ones(numExamples, 1), X];
     z2 = inputLayer * hiddenTheta';
-    hiddenLayer = [ones(size(z2, 1), 1) sigmoid(z2)];
-    z3 = hiddenLayer * outputTheta';
-    outputLayer = sigmoid(z3);
-    predictions = outputLayer;
+    hiddenLayer = [ones(size(z2, 1), 1), sigmoid(z2)];
+    predictions = sigmoid(hiddenLayer * outputTheta');
 
-    % calculate the unregularized cost
-    errors = (-Y) .* log(predictions) - (1 - Y) .* log(1 - predictions);
-    J = sum(sum(errors, 2)) / sampleSize;
+    % compute unregularized cost
+    error = -Y .* log(predictions) - (1 - Y) .* log(1 - predictions);
     
-    % add the regularization penalty
-    regularization = sum(sum(hiddenTheta(:, 2:end) .^ 2, 2)) + sum(sum(outputTheta(:, 2:end) .^ 2, 2));
-    J = J + lambda * regularization / (2 * sampleSize);
+    % compute regularization penalty
+    regularization = sum(sum(hiddenTheta(:, 2:end) .^ 2, 2)) + ... 
+                     sum(sum(outputTheta(:, 2:end) .^ 2, 2));
+       
+    cost = (sum(sum(error, 2)) + lambda * regularization / 2) / numExamples;
     
     %% Backpropagation
-    
     % calculate sigmas
-    sigma3 = outputLayer - Y;
+    sigma3 = predictions - Y;
     sigma2 = (sigma3 * outputTheta) .* sigmoidGradient([ones(size(z2, 1), 1) z2]);
     sigma2 = sigma2(:, 2:end);
 
     % accumulate gradients
-    delta1 = (sigma2' * inputLayer);
-    delta2 = (sigma3' * hiddenLayer);
+    hiddenDelta = sigma2' * inputLayer;
+    outputDelta = sigma3' * hiddenLayer;
 
-    % calculate regularized gradient
-    p1 = (lambda / sampleSize) * [zeros(size(hiddenTheta, 1), 1) hiddenTheta(:, 2:end)];
-    p2 = (lambda / sampleSize) * [zeros(size(outputTheta, 1), 1) outputTheta(:, 2:end)];
-    hiddenThetaGradient = delta1 ./ sampleSize + p1;
-    outputThetaGradient = delta2 ./ sampleSize + p2;
+    % add regularization
+    reg1 = lambda * [zeros(size(hiddenTheta, 1), 1), hiddenTheta(:, 2:end)];
+    reg2 = lambda * [zeros(size(outputTheta, 1), 1), outputTheta(:, 2:end)];
     
-    % Unroll gradients
+    % compute and unroll the gradients
+    hiddenThetaGradient = (hiddenDelta + reg1) ./ numExamples;
+    outputThetaGradient = (outputDelta + reg2) ./ numExamples;
     gradient = [hiddenThetaGradient(:); outputThetaGradient(:)];
 end
