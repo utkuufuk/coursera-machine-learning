@@ -15,8 +15,8 @@ function [trainError, validationError] = learningCurve(X, y, valX, valY, lambda)
     
     for i = 1:trainingSetSize
         theta = trainLinearReg(X(1:i, :), y(1:i), lambda);
-        trainError(i) = linearRegCostFunction(X(1:i, :), y(1:i), theta, 0);
-        validationError(i) = linearRegCostFunction(valX, valY, theta, 0);
+        trainError(i) = regressionCost(X(1:i, :), y(1:i), theta, 0);
+        validationError(i) = regressionCost(valX, valY, theta, 0);
     end
 
 

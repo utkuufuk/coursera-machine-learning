@@ -16,7 +16,7 @@ function [lambdaValues, trainError, validationError] = validationCurve(X, y, val
     for i = 1:length(lambdaValues)
         
         theta = trainLinearReg(X, y, lambdaValues(i));
-        trainError(i) = linearRegCostFunction(X, y, theta, 0);
-        validationError(i) = linearRegCostFunction(valX, valY, theta, 0);
+        trainError(i) = regressionCost(X, y, theta, 0);
+        validationError(i) = regressionCost(valX, valY, theta, 0);
     end
 end
