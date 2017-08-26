@@ -1,4 +1,4 @@
-function predictions = predict(hiddenTheta, outputTheta, X)
+function predictions = nnPredict(hiddenTheta, outputTheta, X)
 % Predicts the label of an input given a trained neural network
     X = [ones(size(X, 1), 1), X];
     hiddenLayer = [ones(size(X, 1), 1), sigmoid(X * hiddenTheta')];

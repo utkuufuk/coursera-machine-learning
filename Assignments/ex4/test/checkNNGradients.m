@@ -33,7 +33,7 @@ function checkNNGradients(lambda)
     nn_params = [Theta1(:) ; Theta2(:)];
 
     % Short hand for cost function
-    costFunc = @(p) nnCostFunction(p, hidden_layer_size, num_labels, X, y, lambda);
+    costFunc = @(p) nnCost(p, hidden_layer_size, num_labels, X, y, lambda);
 
     [~, grad] = costFunc(nn_params);
     numgrad = computeNumericalGradient(costFunc, nn_params);

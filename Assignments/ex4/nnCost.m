@@ -1,4 +1,4 @@
-function [cost, gradient] = nnCostFunction(theta, hiddenLayerSize, numClasses, X, y, lambda)
+function [cost, gradient] = nnCost(theta, numHiddenUnits, numClasses, X, y, lambda)
 % Implements the neural network cost function for a two layer neural network which performs classification
 % [J grad] = NNCOSTFUNCTON(nn_params, hidden_layer_size, numberOfClasses, X, y, lambda) computes the cost and gradient of the neural network. 
 % The parameters for the neural network are "unrolled" into the vector unrolledTheta and need to be converted back into the weight matrices. 
@@ -6,14 +6,7 @@ function [cost, gradient] = nnCostFunction(theta, hiddenLayerSize, numClasses, X
     
     %% Reshape unrolledTheta back into the parameters hiddenTheta and outputTheta
     [numExamples, numFeatures] = size(X);
-    
-    % hiddenTheta is a hiddenLayerSize by (numberOfFeatures + 1) matrix 
-    hiddenThetaSegment = theta(1:hiddenLayerSize * (numFeatures + 1));
-    hiddenTheta = reshape(hiddenThetaSegment, hiddenLayerSize, (numFeatures + 1));
-    
-    % outputTheta is a numberOfClasses by (hiddenLayerSize + 1) matrix
-    outputThetaSegment = theta((1 + (hiddenLayerSize * (numFeatures + 1))):end);
-    outputTheta = reshape(outputThetaSegment, numClasses, (hiddenLayerSize + 1));
+    [hiddenTheta, outputTheta] = recoverTheta(theta, numHiddenUnits, numFeatures, numClasses);
     
     %% Recode the output labels
     Y = zeros(numExamples, numClasses);
