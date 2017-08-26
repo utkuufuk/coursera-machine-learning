@@ -24,13 +24,13 @@ function [cost, gradient] = nnCostFunction(theta, hiddenLayerSize, numClasses, X
 
     %% Calculate the cost J
     % feedforward the neural network
-    inputLayer = [ones(numExamples, 1), X];
-    z2 = inputLayer * hiddenTheta';
-    hiddenLayer = [ones(size(z2, 1), 1), sigmoid(z2)];
-    predictions = sigmoid(hiddenLayer * outputTheta');
+    X = [ones(numExamples, 1), X];
+    z = X * hiddenTheta';
+    hiddenLayer = [ones(size(X, 1), 1), sigmoid(z)];
+    probabilities = sigmoid(hiddenLayer * outputTheta');
 
     % compute unregularized cost
-    error = -Y .* log(predictions) - (1 - Y) .* log(1 - predictions);
+    error = -Y .* log(probabilities) - (1 - Y) .* log(1 - probabilities);
     
     % compute regularization penalty
     regularization = sum(sum(hiddenTheta(:, 2:end) .^ 2, 2)) + ... 
@@ -40,12 +40,12 @@ function [cost, gradient] = nnCostFunction(theta, hiddenLayerSize, numClasses, X
     
     %% Backpropagation
     % calculate sigmas
-    sigma3 = predictions - Y;
-    sigma2 = (sigma3 * outputTheta) .* sigmoidGradient([ones(size(z2, 1), 1) z2]);
+    sigma3 = probabilities - Y;
+    sigma2 = (sigma3 * outputTheta) .* sigmoidGradient([ones(size(X, 1), 1), z]);
     sigma2 = sigma2(:, 2:end);
 
     % accumulate gradients
-    hiddenDelta = sigma2' * inputLayer;
+    hiddenDelta = sigma2' * X;
     outputDelta = sigma3' * hiddenLayer;
 
     % add regularization
