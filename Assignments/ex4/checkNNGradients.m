@@ -17,10 +17,16 @@ function checkNNGradients(lambda)
     m = 5;
 
     % We generate some 'random' test data
-    Theta1 = debugInitializeWeights(hidden_layer_size, input_layer_size);
-    Theta2 = debugInitializeWeights(num_labels, hidden_layer_size);
-    % Reusing debugInitializeWeights to generate X
-    X  = debugInitializeWeights(m, input_layer_size - 1);
+    % Use "sin", to ensure that thata is always of the same values for debugging
+    Theta1 = zeros(hidden_layer_size, 1 + input_layer_size);
+    Theta1 = reshape(sin(1:numel(Theta1)), size(Theta1)) / 10;
+    
+    Theta2 = zeros(num_labels, 1 + hidden_layer_size);
+    Theta2 = reshape(sin(1:numel(Theta2)), size(Theta2)) / 10;
+    
+    % Generate X
+    X = zeros(m, input_layer_size);
+    X = reshape(sin(1:numel(X)), size(X)) / 10;
     y  = 1 + mod(1:m, num_labels)';
 
     % Unroll parameters
