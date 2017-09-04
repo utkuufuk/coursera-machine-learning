@@ -3,7 +3,7 @@ function learningCurve(X, y, valX, valY, lambda)
     trainError = zeros(length(y), 1);
     validationError = zeros(length(y), 1);
     
-    for i = 1:length(y)
+    for i = 2:length(y)
         theta = trainLinearRegression(X(1:i, :), y(1:i), lambda);
         
         % we must compute the errors without regularization
@@ -11,8 +11,8 @@ function learningCurve(X, y, valX, valY, lambda)
         validationError(i) = regressionCost(valX, valY, theta, 0);
     end
     
-    plot(1:length(y), trainError, 1:length(y), validationError);
-    legend('Training', 'Cross Validation')
+    plot(2:length(y), trainError(2:end), '-r', 2:length(y), validationError(2:end), '-b', 'LineWidth', 2);
+    legend('Training', 'Validation')
     xlabel('Number of training examples')
     ylabel('Error')
 end

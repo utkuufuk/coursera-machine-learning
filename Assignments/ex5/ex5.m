@@ -22,7 +22,8 @@ plot(X, predictions, '--', 'LineWidth', 2)
 hold off;
 
 % Since the model is underfitting the data, we expect to see a graph with "high bias"
-learningCurve([ones(length(y), 1) X], y, [ones(size(Xval, 1), 1) Xval], yval, 0);
+learningCurve([ones(length(y), 1) X], y, [ones(length(yval), 1) Xval], yval, 0);
+
 
 %% =========== Part 3: Feature Mapping for Polynomial Regression =============
 % Map X onto Polynomial Features and Normalize
@@ -31,13 +32,13 @@ X_poly = polyFeatures(X, p);
 [X_poly, means, stDevs] = featureNormalize(X_poly);
 X_poly = [ones(length(y), 1), X_poly];
 
-% Map X_poly_test and normalize (using mu and sigma)
+% Map X_poly_test and normalize (using means and stDevs)
 X_poly_test = polyFeatures(Xtest, p);
 X_poly_test = bsxfun(@minus, X_poly_test, means);
 X_poly_test = bsxfun(@rdivide, X_poly_test, stDevs);
 X_poly_test = [ones(size(X_poly_test, 1), 1), X_poly_test];
 
-% Map X_poly_val and normalize (using mu and sigma)
+% Map X_poly_val and normalize (using means and stDevs)
 X_poly_val = polyFeatures(Xval, p);
 X_poly_val = bsxfun(@minus, X_poly_val, means);
 X_poly_val = bsxfun(@rdivide, X_poly_val, stDevs);
