@@ -32,30 +32,18 @@ plt.plot(X[:, 1], predictions, linewidth=2)
 
 # train models using different learning rates and plot convergence  
 plt.figure()
-_, cost_history = reg.gradient_descent(X, y, 0.01, 1200)
-plt.plot(cost_history, linewidth=2)
-
-_, cost_history = reg.gradient_descent(X, y, 0.012, 1200)
-plt.plot(cost_history, linewidth=2)
-
-_, cost_history = reg.gradient_descent(X, y, 0.014, 1200)
-plt.plot(cost_history, linewidth=2)
-
-_, cost_history = reg.gradient_descent(X, y, 0.016, 1200)
-plt.plot(cost_history, linewidth=2)
-
-_, cost_history = reg.gradient_descent(X, y, 0.018, 1200)
-plt.plot(cost_history, linewidth=2)
-
-_, cost_history = reg.gradient_descent(X, y, 0.02, 1200)
-plt.plot(cost_history, linewidth=2)
+num_iters = 1200
+learning_rates = [0.01, 0.015, 0.02]
+for lr in learning_rates:
+    _, cost_history = reg.gradient_descent(X, y, lr, num_iters)
+    plt.plot(cost_history, linewidth=2)
 
 plt.title("Convergence plots for different learning rates")
 plt.xlabel("number of iterations", fontsize=14)
 plt.ylabel("cost", fontsize=14)
-plt.axis([0, 1200, 4, 6])
+plt.legend(list(map(str, learning_rates)))
+plt.axis([0, num_iters, 4, 6])
 plt.grid()
-plt.legend(["0.010", "0.012", "0.014", "0.016", "0.018", "0.020"])
 
 # train a model using a large learning rate and plot convergence
 _, cost_history = reg.gradient_descent(X, y, 0.025, 50)
